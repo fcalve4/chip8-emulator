@@ -9,8 +9,8 @@ struct chip8_cpu {
     uint16_t stack[16];
     uint8_t v[16]; // register array
 
-    //uint8_t delay_timer;
-    //uint8_t sound_timer;
+    uint8_t delay_timer;
+    uint8_t sound_timer;
 };
 
 void init_chip8_cpu(struct chip8_cpu* cpu);

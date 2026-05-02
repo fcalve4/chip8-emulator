@@ -1,16 +1,19 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-#include <SDL2/SDL.h>
+#include <stdint.h>
+
+#include "chip8.h"
 
 #define MEMORY_SIZE 4096
 
-void load_rom(char* f, uint16_t* memory)
+void load_rom(char* f, uint8_t* memory)
 {
 	FILE* file_ptr = fopen(f, "rb");
 	
 	if(file_ptr == NULL) {
-		fprintf(stderr,"Unable to open open file \n");
+		fprintf(stderr,"Unable to open open file \n");\
+        return;
 	}	
 	
     // Get the size of the file
@@ -18,31 +21,37 @@ void load_rom(char* f, uint16_t* memory)
 	int file_size = ftell(file_ptr); 
 	fseek(file_ptr, 0, SEEK_SET);
 
-	fread(memory+0x200, sizeof(uint16_t), file_size, file_ptr);
+    if (file_size > MEMORY_SIZE - 0x200) {
+        fprintf(stderr, "ROM too large\n");
+        fclose(file_ptr);
+        return;
+    }
+
+    // Read ROM in at +0x200 because thats where the PC will be set
+	fread(memory+0x200, sizeof(uint8_t), file_size, file_ptr);
+    fclose(file_ptr);
 }
 
 
 int main(int argc, char** argv) {
 
     if (argc < 2) {
-		printf("Usage: ./a.out <rom> \n");
+		printf("Usage: ./<executable> <rom> \n");
 		return 1;
 	}
 
-    
+    struct chip8_cpu cpu;
+    init_chip8_cpu(&cpu);
 
-    //uint16_t PC;
-    //uint16_t sp;
-    //uint16_t I; 
+    load_rom(argv[1], cpu.memory);
 
-    uint16_t memory[MEMORY_SIZE];
-    //uint16_t stack[16];
-    //uint8_t v[16];
+    while(1) {
+        uint16_t instruction = cpu.memory[cpu.PC] << 8 | cpu.memory[cpu.PC+1];
+        cpu.PC += 2;
 
-    //uint8_t delay_timer;
-    //uint8_t sound_timer;
+        execute(&cpu, instruction);
+    }
 
-    load_rom(argv[1], memory);
 
 
     return 0;

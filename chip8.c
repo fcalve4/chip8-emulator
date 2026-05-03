@@ -1,16 +1,19 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-#include <stdint.h>
 
 #include "chip8.h"
 
 void init_chip8_cpu(struct chip8_cpu* cpu) {
     memset(cpu, 0, sizeof(*cpu));
     cpu->PC = 0x200;
+    cpu->is_running = 1;
 }
 
-void execute(struct chip8_cpu* cpu, uint16_t instruction) {
+void execute(struct chip8_cpu* cpu) {
+    uint16_t instruction = cpu->memory[cpu.PC] << 8 | cpu->memory[cpu.PC+1];
+    cpu->PC += 2;
+
     // decode variables
     uint16_t addr = instruction & 0xFFF; // lower 12 bits
     uint8_t kk = instruction & 0xFF; // lower 8 bits
@@ -24,14 +27,18 @@ void execute(struct chip8_cpu* cpu, uint16_t instruction) {
         case 0x0:
             switch (kk) {
                 case 0xE0: // CLS
+                    break;
                 case 0xEE: // RET
+                    break;
             }
         case 0x1: // JP addr
             cpu->PC = addr;
             break;
         case 0x2: // CALL addr
-            
-            
+            cpu->stack[cpu->sp] = cpu->PC;
+            cpu->sp += 1;
+            cpu->PC = addr;
+            break;
         case 0x3: // SE Vx, kk
             if (cpu->v[x] == kk) {
                 cpu->PC += 2;
@@ -48,7 +55,7 @@ void execute(struct chip8_cpu* cpu, uint16_t instruction) {
             }
             break;
         case 0x6: // LD Vx, kk
-            cpu->v[x] == kk;
+            cpu->v[x] = kk;
             break;
         case 0x7: // ADD Vx, kk
             cpu->v[x] += kk;
@@ -119,6 +126,7 @@ void execute(struct chip8_cpu* cpu, uint16_t instruction) {
             cpu->v[x] = kk & random_int;
             break;
         case 0xD: // Dxyn - DRW Vx, Vy, nibble
+            break;
         case 0xE:
             switch (kk) {
                 case 0x9E: // SKP Vx

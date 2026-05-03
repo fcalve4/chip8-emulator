@@ -1,6 +1,10 @@
+#include <stdint.h>
 #define MEMORY_SIZE 4096
 
 struct chip8_cpu {
+
+    int is_running;
+
     uint16_t PC;
     uint8_t sp;
     uint16_t I; 
@@ -15,4 +19,4 @@ struct chip8_cpu {
 
 void init_chip8_cpu(struct chip8_cpu* cpu);
 
-void execute(struct chip8_cpu* cpu, uint16_t instruction);
+void execute(struct chip8_cpu* cpu);

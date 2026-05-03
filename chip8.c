@@ -4,6 +4,32 @@
 
 #include "chip8.h"
 
+int load_rom(char* f, uint8_t* memory)
+{
+	FILE* file_ptr = fopen(f, "rb");
+	
+	if(file_ptr == NULL) {
+		fprintf(stderr,"Unable to open open file \n");\
+        return 1;
+	}	
+	
+    // Get the size of the file
+	fseek(file_ptr, 0, SEEK_END);
+	int file_size = ftell(file_ptr); 
+	fseek(file_ptr, 0, SEEK_SET);
+
+    if (file_size > MEMORY_SIZE - 0x200) {
+        fprintf(stderr, "ROM too large\n");
+        fclose(file_ptr);
+        return 1;
+    }
+
+    // Read ROM in at +0x200 because thats where the PC will be set
+	fread(memory+0x200, sizeof(uint8_t), file_size, file_ptr);
+    fclose(file_ptr);
+    return 0;
+}
+
 void init_chip8_cpu(struct chip8_cpu* cpu) {
     memset(cpu, 0, sizeof(*cpu));
     cpu->PC = 0x200;
@@ -11,7 +37,9 @@ void init_chip8_cpu(struct chip8_cpu* cpu) {
 }
 
 void execute(struct chip8_cpu* cpu) {
-    uint16_t instruction = cpu->memory[cpu.PC] << 8 | cpu->memory[cpu.PC+1];
+    // fetch next instruction
+    uint16_t instruction = cpu->memory[cpu->PC] << 8 | cpu->memory[cpu->PC+1];
+    printf("Executing: %04x at 0x%x\n", instruction, cpu->PC);
     cpu->PC += 2;
 
     // decode variables

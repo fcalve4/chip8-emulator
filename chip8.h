@@ -13,6 +13,9 @@ struct chip8_cpu {
     uint16_t stack[16];
     uint8_t v[16]; // register array
 
+    uint8_t pixel_array[64 * 32];
+    uint8_t keyboard[16];
+
     uint8_t delay_timer;
     uint8_t sound_timer;
 };

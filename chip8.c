@@ -33,7 +33,6 @@ void init_chip8_cpu(struct chip8_cpu *cpu)
     memset(cpu, 0, sizeof(*cpu));
     cpu->PC = 0x200;
     cpu->is_running = 1;
-    cpu->draw_flag = 1;
 }
 
 void execute(struct chip8_cpu *cpu)
@@ -201,7 +200,6 @@ void execute(struct chip8_cpu *cpu)
                 }
             }
         }
-        cpu->draw_flag = 1;
         break;
     case 0xE:
         switch (kk)
@@ -268,8 +266,6 @@ void execute(struct chip8_cpu *cpu)
 
 void draw(struct chip8_cpu *cpu, SDL_Renderer *renderer, SDL_Texture *screen)
 {
-    if (!cpu->draw_flag)
-        return;
 
     uint32_t pixels[64 * 32];
     memset(pixels, 0, sizeof(pixels));
@@ -291,5 +287,4 @@ void draw(struct chip8_cpu *cpu, SDL_Renderer *renderer, SDL_Texture *screen)
     SDL_RenderCopy(renderer, screen, NULL, &position);
     SDL_RenderPresent(renderer);
 
-    cpu->draw_flag = 0;
 }

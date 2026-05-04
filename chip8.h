@@ -7,7 +7,6 @@
 
 struct chip8_cpu
 {
-    uint8_t draw_flag;
     uint8_t is_running;
 
     uint16_t PC;

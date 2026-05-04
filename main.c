@@ -1,7 +1,4 @@
 #include "chip8.h"
-#define TARGET_FPS 60
-#define FRAME_TIME (1000 / TARGET_FPS) // ~16ms per frame
-#include <time.h>
 
 int main(int argc, char **argv)
 {
@@ -10,6 +7,16 @@ int main(int argc, char **argv)
     {
         printf("Usage: ./<executable> <rom> \n");
         return 1;
+    }
+
+    int speed = 4;
+    // Check for optional speed flag
+    if (argc == 4 && strcmp(argv[2], "--speed") == 0) {
+        speed = atoi(argv[3]);
+        if (speed < 0) {
+            speed = 0;
+        }
+        printf("Speed: %dms\n", speed);
     }
 
     SDL_Renderer *renderer;
@@ -24,7 +31,7 @@ int main(int argc, char **argv)
 
     SDL_Event event;
     window = SDL_CreateWindow(("CHIP-8 Emulator"), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 320, 0);
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     SDL_RenderSetLogicalSize(renderer, 64, 32);
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
@@ -163,7 +170,7 @@ int main(int argc, char **argv)
             }
         }
 
-        SDL_Delay(5);
+        SDL_Delay(speed);
         if (cpu.delay_timer > 0)
         {
             --cpu.delay_timer;

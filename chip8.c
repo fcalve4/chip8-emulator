@@ -33,13 +33,14 @@ void init_chip8_cpu(struct chip8_cpu *cpu)
     memset(cpu, 0, sizeof(*cpu));
     cpu->PC = 0x200;
     cpu->is_running = 1;
+    cpu->draw_flag = 1;
 }
 
 void execute(struct chip8_cpu *cpu)
 {
     // fetch next instruction
     uint16_t instruction = cpu->memory[cpu->PC] << 8 | cpu->memory[cpu->PC + 1];
-    printf("Executing: %04x at 0x%x\n", instruction, cpu->PC);
+    // printf("Executing: %04x at 0x%x\n", instruction, cpu->PC);
     cpu->PC += 2;
 
     // decode variables
@@ -169,7 +170,7 @@ void execute(struct chip8_cpu *cpu)
         int random_int = rand() % 256;
         cpu->v[x] = kk & random_int;
         break;
-    case 0xD: // Dxyn - DRW Vx, Vy, nybble
+    case 0xD: // Dxyn - DRW Vx, Vy, nybble - (the big one)
         uint16_t sprite_x = cpu->v[x];
         uint16_t sprite_y = cpu->v[y];
         uint16_t height = n;
@@ -200,7 +201,7 @@ void execute(struct chip8_cpu *cpu)
                 }
             }
         }
-
+        cpu->draw_flag = 1;
         break;
     case 0xE:
         switch (kk)
@@ -263,42 +264,32 @@ void execute(struct chip8_cpu *cpu)
         }
         break;
     }
-
-    printf("Instruction completed\n");
 }
 
 void draw(struct chip8_cpu *cpu, SDL_Renderer *renderer, SDL_Texture *screen)
 {
-    uint32_t pixels[64 * 32];
-    unsigned int x, y;
+    if (!cpu->draw_flag)
+        return;
 
-    // Clear pixels
+    uint32_t pixels[64 * 32];
     memset(pixels, 0, sizeof(pixels));
 
-    // Copy CPU pixel array to SDL format
-    for (y = 0; y < 32; y++)
+    for (int y = 0; y < 32; y++)
     {
-        for (x = 0; x < 64; x++)
+        for (int x = 0; x < 64; x++)
         {
             if (cpu->pixel_array[x + (y * 64)] == 1)
             {
-                pixels[x + (y * 64)] = UINT32_MAX; // White pixel
+                pixels[x + (y * 64)] = UINT32_MAX;
             }
         }
     }
 
-    // Update texture with pixel data
     SDL_UpdateTexture(screen, NULL, pixels, 64 * sizeof(uint32_t));
 
-    // Scale up the display (10x looks good)
-    SDL_Rect dest;
-    dest.x = 0;
-    dest.y = 0;
-    dest.w = 64 * 10; // Scale 10x
-    dest.h = 32 * 10;
-
-    // Clear renderer, copy texture, present
-    SDL_RenderClear(renderer);
-    SDL_RenderCopy(renderer, screen, NULL, &dest);
+    SDL_Rect position = {0, 0, 64, 32}; // ← Small rect, SDL scales it
+    SDL_RenderCopy(renderer, screen, NULL, &position);
     SDL_RenderPresent(renderer);
+
+    cpu->draw_flag = 0;
 }

@@ -7,8 +7,8 @@
 
 struct chip8_cpu
 {
-
-    int is_running;
+    uint8_t draw_flag;
+    uint8_t is_running;
 
     uint16_t PC;
     uint8_t sp;
@@ -23,6 +23,8 @@ struct chip8_cpu
 
     uint8_t delay_timer;
     uint8_t sound_timer;
+
+    
 };
 
 int load_rom(char *f, uint8_t *memory);

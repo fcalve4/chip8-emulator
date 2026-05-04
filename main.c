@@ -1,9 +1,11 @@
 #include "chip8.h"
+#define TARGET_FPS 60
+#define FRAME_TIME (1000 / TARGET_FPS) // ~16ms per frame
+#include <time.h>
 
 int main(int argc, char **argv)
 {
 
-    // Args check
     if (argc < 2)
     {
         printf("Usage: ./<executable> <rom> \n");
@@ -23,6 +25,7 @@ int main(int argc, char **argv)
     SDL_Event event;
     window = SDL_CreateWindow(("CHIP-8 Emulator"), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 320, 0);
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    SDL_RenderSetLogicalSize(renderer, 64, 32);
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
     screen = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, 64, 32);
@@ -38,7 +41,6 @@ int main(int argc, char **argv)
 
     while (cpu.is_running)
     {
-        SDL_Delay(2); // default speed of 5 ms?
         while (SDL_PollEvent(&event))
         {
             switch (event.type)
@@ -160,12 +162,13 @@ int main(int argc, char **argv)
                 break;
             }
         }
+
+        SDL_Delay(5);
         if (cpu.delay_timer > 0)
         {
             --cpu.delay_timer;
         }
         execute(&cpu);
-        printf("After execute: is_running = %d\n", cpu.is_running);
         draw(&cpu, renderer, screen);
     }
 
@@ -175,6 +178,5 @@ int main(int argc, char **argv)
     SDL_DestroyWindow(window);
     SDL_Quit();
 
-    printf("Main loop exited. is_running = %d\n", cpu.is_running);
     return 0;
 }

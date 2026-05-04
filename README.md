@@ -4,9 +4,9 @@ A CHIP-8 interpreter written in C.
 
 ## What is CHIP-8?
 
-CHIP-8 is an interpreted programming language from the 1970s, originally designed for 
-home computers like the COSMAC VIP and ETI 660. It has 4KB of memory, 16 registers, 
-a 64x32 pixel display, and used a 16-key hexadecimal keypad for input. 
+CHIP-8 is an interpreted programming language and virtual machine specification from the 1970s, originally designed for 
+home computers like the COSMAC VIP and ETI 660. It makes use of 4KB of memory, 16 8-bit registers, 
+a 64x32 pixel display, and a 16-key hexadecimal keypad for input. 
 
 ## Why I Built This
 

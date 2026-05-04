@@ -15,21 +15,6 @@ to implement but comprehensive enough to cover the core concepts that carry
 over to more complex systems.
 
 
-## How It Works
-
-### CPU
-- Fetch: Read 2 bytes from memory at PC
-- Decode: Break opcode into variables (X, Y, N, KK, NNN)
-- Execute: Switch based on opcode and do instruction
-
-
-### Timers
-
-- Both count down at 60Hz
-- delay_timer used for game timing
-- sound_timer triggers a beep (not implemented)
-
-
 ## Project Structure
 
 ```

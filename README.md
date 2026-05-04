@@ -1,6 +1,6 @@
 # CHIP-8 Emulator
 
-A CHIP-8 interpreter written in C.
+A CHIP-8 emulator (interpreter) written in C.
 
 ## What is CHIP-8?
 

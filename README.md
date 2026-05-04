@@ -2,25 +2,17 @@
 
 A CHIP-8 interpreter written in C.
 
+## What is CHIP-8?
+
+CHIP-8 is an interpreted programming language from the 1970s, originally designed for 
+home computers like the COSMAC VIP and ETI 660. It has 4KB of memory, 16 registers, 
+a 64x32 pixel display, and used a 16-key hexadecimal keypad for input. 
 
 ## Why I Built This
 
-<!-- Talk about your motivation here. Examples:
-     - Learning how CPUs work at a low level
-     - Interest in emulation / retro gaming
-     - Practicing C and systems programming
-     - Understanding how graphics and input work with SDL2
--->
-
-
-## What is CHIP-8?
-
-<!-- Brief explanation of CHIP-8. Examples:
-     - Interpreted language from the 1970s
-     - Originally ran on RCA COSMAC VIP and Telmac 1800
-     - 4KB memory, 16 registers, 64x32 display
-     - Used to write simple games like Pong, Tetris, Space Invaders
--->
+CHIP-8 is a common introduction into building emulators. It is simple enough 
+to implement but comprehensive enough to cover the core concepts that carry 
+over to more complex systems.
 
 
 ## How It Works
@@ -29,16 +21,6 @@ A CHIP-8 interpreter written in C.
 - Fetch: Read 2 bytes from memory at PC
 - Decode: Break opcode into variables (X, Y, N, KK, NNN)
 - Execute: Switch based on opcode and do instruction
-
-
-### Display
-
-- 64x32 pixel array
-
-### Input
-
-- CHIP-8 has a 16-key hex keypad (0-F)
-- Mapped to modern keyboard keys (X, 1-4, Q-R, A-F, Z-V)
 
 
 ### Timers

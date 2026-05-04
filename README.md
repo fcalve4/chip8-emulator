@@ -55,7 +55,7 @@ chip8-emulator/
 ├── main.c        # SDL2 setup, main loop, input handling
 ├── chip8.c       # CPU emulation, draw, execute, load ROM
 ├── chip8.h       # Structs, constants, function declarations
-└── roms/         # Publiclically available CHIP-8 ROM files
+└── roms/         # Publicly available CHIP-8 ROM files
 ```
 
 
@@ -71,6 +71,14 @@ gcc -Wall -Wextra main.c chip8.c -lSDL2 -o chip8
 ```bash
 ./chip8 roms/PONG
 ./chip8 roms/TICTAC
+```
+
+An optional `--speed` flag controls the delay in milliseconds between each CPU cycle. Lower is faster, higher is slower. Default is 4ms.
+
+```bash
+./chip8 roms/PONG --speed 2    # faster
+./chip8 roms/PONG --speed 4    # default
+./chip8 roms/PONG --speed 10   # slower
 ```
 
 
@@ -94,7 +102,6 @@ gcc -Wall -Wextra main.c chip8.c -lSDL2 -o chip8
 | D         | R        |
 | E         | F        |
 | F         | V        |
-
 
 
 ## Resources

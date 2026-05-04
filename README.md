@@ -31,13 +31,6 @@ chip8-emulator/
 **Requirements:** gcc, SDL2
 
 ```bash
-make
-make run ROM=roms/UFO
-```
-
-or
-
-```bash
 gcc -Wall -Wextra main.c chip8.c -lSDL2 -o chip8
 ```
 

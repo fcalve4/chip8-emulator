@@ -113,6 +113,7 @@ void execute(struct chip8_cpu *cpu)
             cpu->v[x] = cpu->v[x] ^ cpu->v[y];
             break;
         case 0x4: // ADD Vx, Vy
+        {
             int i;
             i = (int)(cpu->v[x]) + (int)(cpu->v[y]);
             if (i > 255)
@@ -121,6 +122,7 @@ void execute(struct chip8_cpu *cpu)
                 cpu->v[0xF] = 0;
             cpu->v[x] = i & 0xFF;
             break;
+        }
         case 0x5: // SUB Vx, Vy
             if (cpu->v[x] > cpu->v[y])
             {
@@ -166,10 +168,13 @@ void execute(struct chip8_cpu *cpu)
         cpu->PC = addr + cpu->v[0];
         break;
     case 0xC: // RND Vx, byte
+    {
         int random_int = rand() % 256;
         cpu->v[x] = kk & random_int;
         break;
+    }
     case 0xD: // Dxyn - DRW Vx, Vy, nybble - (the big one)
+    {
         uint16_t sprite_x = cpu->v[x];
         uint16_t sprite_y = cpu->v[y];
         uint16_t height = n;
@@ -201,6 +206,7 @@ void execute(struct chip8_cpu *cpu)
             }
         }
         break;
+    }
     case 0xE:
         switch (kk)
         {
@@ -239,6 +245,7 @@ void execute(struct chip8_cpu *cpu)
             cpu->I = cpu->v[x] * 5;
             break;
         case 0x33: // LDD B, Vx
+        {
             int temp;
             temp = cpu->v[x];
             cpu->memory[cpu->I] = (temp - (temp % 100)) / 100;
@@ -247,6 +254,7 @@ void execute(struct chip8_cpu *cpu)
             temp -= cpu->memory[cpu->I + 1] * 10;
             cpu->memory[cpu->I + 2] = temp;
             break;
+        }
         case 0x55: // LD [I], Vx
             for (uint8_t i = 0; i <= x; i++)
             {
